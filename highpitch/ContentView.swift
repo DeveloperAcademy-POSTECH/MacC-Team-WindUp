@@ -1,6 +1,6 @@
 //
-//  ContentView.swift
-//  highpitch
+//  TestView.swift
+//  Highpitch
 //
 //  Created by Yun Dongbeom on 2023/09/11.
 //
@@ -20,18 +20,19 @@ struct ContentView: View {
                 .imageScale(.large)
                 .foregroundColor(.accentColor)
             Text("Hello, iOS")
-            #endif   
+            #endif
+            Text("Branch Test")
         }
         .padding()
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct TestView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             ContentView()
                 .previewDevice("Mac")
-                .previewDisplayName("MacOS Preview")
+                .previewDisplayName("Mac Preview")
             ContentView()
                 .previewDevice("iPhone 14")
                 .previewDisplayName("iPhone 14 Preview")
