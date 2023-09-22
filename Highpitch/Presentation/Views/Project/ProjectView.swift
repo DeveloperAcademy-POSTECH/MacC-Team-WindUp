@@ -9,24 +9,17 @@ import SwiftUI
 
 struct ProjectView: View {
     @StateObject var projectVM = ProjectVM()
+    @Binding var navigationPath: [Route]
     
-    @Binding var sidebarStatus: Int
     var body: some View {
-        if sidebarStatus == 0 {
-            PresentationView(sidebarStatus: $sidebarStatus)
-                .onAppear {
-                    projectVM.getProject()
-                }
-        } else {
-            RecordView(sidebarStatus: $sidebarStatus)
-        }
+        RecordView(navigationPath: $navigationPath)
+            .environmentObject(projectVM)
     }
 }
 
-struct ProjectView_Previews: PreviewProvider {
-    @State static var sidebarStatus = 0
-    
-    static var previews: some View {
-        ProjectView(sidebarStatus: $sidebarStatus)
-    }
-}
+//struct ProjectView_Previews: PreviewProvider {
+//
+//    static var previews: some View {
+//        ProjectView()
+//    }
+//}

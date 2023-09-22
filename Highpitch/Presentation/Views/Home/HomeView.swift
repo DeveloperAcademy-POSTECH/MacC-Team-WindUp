@@ -7,175 +7,46 @@
 
 import SwiftUI
 
+enum Route {
+    case view1
+    case view2
+}
+
 struct HomeView: View {
-    @State var views = ["발표 연습하기", "연습 기록보기"]
-    @State var isProjectOpen = false
-    @State var sidebarStatus = 0
+    @StateObject var vm = HomeVM()
+    @State private var isModalActive = false
+    @State private var navigationPath: [Route] = []
     
     var body: some View {
-        HStack(spacing: 0) {
-            List(0...1, id: \.self) { index in
-                Text(views[index])
-                    .onTapGesture {
-                        sidebarStatus = index
-                    }
+        NavigationStack(path: $navigationPath) {
+            VStack(alignment: .leading, spacing: 0) {
+                projectLogoView()
+                newProjectViewContainer()
+                hasProjectListViewContainer()
             }
-            .frame(width: 172)
-            if sidebarStatus == 0 {
-                VStack(alignment: .leading) {
-                    // logo
-                    Image(.SystemImage.mainLogo.rawValue)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 35)
-                    // new project
-                    VStack(alignment: .leading) {
-                        Text("새 프로젝트")
-                            .font(.largeTitle)
-                        Text("새 프로젝트를 추가해서 제작해보세요")
-                        VStack {
-                            Image(systemName: "folder.badge.plus")
-                            Button {
-                                print("프로젝트 생성..!")
-                            } label: {
-                                Text("프로젝트 생성하기")
-                            }
-                        }
-                        .frame(maxWidth: .infinity)
-                    }
-                    .frame(alignment: .topLeading)
-                    .border(.red)
-                    // prev project
-                    VStack(alignment: .leading) {
-                        Text("이전 프로젝트")
-                            .font(.largeTitle)
-                        VStack {
-                            GeometryReader { geometry in
-                                let containerWidth = geometry.size.width
-                                let itemWidth = (containerWidth - 56 * 3) / 4
-                                
-                                ScrollView {
-                                    LazyVGrid(
-                                        columns: [
-                                            GridItem(.flexible(minimum: itemWidth), spacing: 56),
-                                            GridItem(.flexible(minimum: itemWidth), spacing: 56),
-                                            GridItem(.flexible(minimum: itemWidth), spacing: 56),
-                                            GridItem(.flexible(minimum: itemWidth), spacing: 56)
-                                        ], spacing: 40) {
-                                            ForEach(0...20, id: \.self) { index in
-                                                VStack(alignment: .leading) {
-                                                    ZStack {
-                                                        Image(.SystemImage.mainLogo.rawValue)
-                                                            .resizable()
-                                                            .scaledToFit()
-                                                            .frame(width: 100)
-                                                    }
-                                                    .frame(maxWidth: .infinity, minHeight: itemWidth / 16 * 9)
-                                                    .background(Color.black)
-                                                    Text("프로젝트 샘플 - \(index + 1) - \(itemWidth)")
-                                                        .font(.body)
-                                                        .lineLimit(1)
-                                                    Text("\(Date().description)")
-                                                        .font(.footnote)
-                                                        .lineLimit(1)
-                                                }
-                                                .frame(
-                                                    maxWidth: .infinity
-                                                )
-                                                .border(.red)
-                                                .onTapGesture {
-                                                    sidebarStatus = 0
-                                                    isProjectOpen.toggle()
-                                                }
-                                            }
-                                        }
-                                }
-                            }
-      
-                        }
-                        .frame(maxWidth: .infinity)
-                    }
-                    .frame(alignment: .topLeading)
-                    .border(.red)
+            .padding(.top, 68)
+            .padding(.horizontal, 128)
+            .frame(
+                maxWidth: .infinity,
+                maxHeight: .infinity,
+                alignment: .topLeading
+            )
+            .navigationDestination(for: Route.self, destination: { route in
+                switch route {
+                case .view1:
+                    ProjectView(navigationPath: $navigationPath)
+                        .toolbar(.hidden, for: .automatic)
+                case  .view2:
+                    PresentationView(navigationPath: $navigationPath)
+                        .toolbar(.hidden, for: .automatic)
                 }
-                .padding(.top, 68)
-                .padding(.horizontal, 128)
-                .frame(
-                    maxWidth: .infinity,
-                    maxHeight: .infinity,
-                    alignment: .topLeading
-                )
-            } else {
-                VStack(alignment: .leading) {
-                    // logo
-                    Image(.SystemImage.mainLogo.rawValue)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 35)
-                    // new project
-                    VStack(alignment: .leading) {
-                        Text("연습 기록보기")
-                            .font(.largeTitle)
-                        Text("연습 기록을 볼 프로젝트를 선택해주세요.")
-                    }
-                    .frame(alignment: .topLeading)
-                    .border(.red)
-                    // prev project
-                    VStack {
-                        GeometryReader { geometry in
-                            let containerWidth = geometry.size.width
-                            let itemWidth = (containerWidth - 56 * 3) / 4
-                            
-                            ScrollView {
-                                LazyVGrid(
-                                    columns: [
-                                        GridItem(.flexible(minimum: itemWidth), spacing: 56),
-                                        GridItem(.flexible(minimum: itemWidth), spacing: 56),
-                                        GridItem(.flexible(minimum: itemWidth), spacing: 56),
-                                        GridItem(.flexible(minimum: itemWidth), spacing: 56)
-                                    ], spacing: 40) {
-                                        ForEach(0...20, id: \.self) { index in
-                                            VStack(alignment: .leading) {
-                                                ZStack {
-                                                    Image(.SystemImage.mainLogo.rawValue)
-                                                        .resizable()
-                                                        .scaledToFit()
-                                                        .frame(width: 100)
-                                                }
-                                                .frame(maxWidth: .infinity, minHeight: itemWidth / 16 * 9)
-                                                .background(Color.black)
-                                                Text("프로젝트 샘플 - \(index + 1) - \(itemWidth)")
-                                                    .font(.body)
-                                                    .lineLimit(1)
-                                                Text("\(Date().description)")
-                                                    .font(.footnote)
-                                                    .lineLimit(1)
-                                            }
-                                            .frame(
-                                                maxWidth: .infinity
-                                            )
-                                            .border(.red)
-                                            .onTapGesture {
-                                                sidebarStatus = 1
-                                                isProjectOpen.toggle()
-                                            }
-                                        }
-                                    }
-                            }
-                        }
-  
-                    }
-                    .frame(maxWidth: .infinity)
-                }
-                .padding(.top, 68)
-                .padding(.horizontal, 128)
-                .frame(
-                    maxWidth: .infinity,
-                    maxHeight: .infinity,
-                    alignment: .topLeading
-                )
+            })
+            .sheet(isPresented: $isModalActive, content: {
+                Text("HH")
+            })
+            .onAppear {
+                vm.updateProjects()
             }
-
         }
         .frame(
             minWidth: 960,
@@ -184,17 +55,124 @@ struct HomeView: View {
             maxHeight: .infinity,
             alignment: .topLeading
         )
-        .navigationDestination(isPresented: $isProjectOpen) {
-            ProjectView(sidebarStatus: $sidebarStatus)
-        }
+
     }
-    
 }
 
-struct HomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            HomeView()
+extension HomeView {
+    // MARK: - projectLogoView
+    private func projectLogoView() -> some View {
+        Image(.SystemImage.mainLogo.rawValue)
+            .resizable()
+            .scaledToFit()
+            .frame(height: 35)
+            .padding(.bottom, 20)
+    }
+    // MARK: - newProjectView
+    private func newProjectViewContainer() -> some View {
+        VStack(alignment: .leading) {
+            // TextContainer
+            VStack(alignment: .leading, spacing: 12) {
+                Text("새 프로젝트")
+                    .systemFont(.headline)
+                Text("새 프로젝트를 추가해서 제작해보세요")
+                    .systemFont(.body)
+                    .foregroundColor(.systemGray600)
+            }
+            VStack(spacing: 20) {
+                Image(systemName: SFSymbols.addProject.rawValue)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 84, height: 68)
+                    .foregroundColor(.systemGray500)
+                HPButton(
+                    label: "프로젝트 생성하기",
+                    size: .large,
+                    width: 180
+                ) {
+                    isModalActive.toggle()
+                }
+            }
+            .padding(.bottom, 68)
+            .frame(maxWidth: .infinity)
+        }
+        .frame(alignment: .topLeading)
+        .border(width: 1,
+                edges: [.bottom],
+                color: .systemGray400
+        )
+    }
+    
+    // MARK: - hasProjectListiew
+    private func hasProjectListViewContainer() -> some View {
+        VStack(alignment: .leading) {
+            Text("이전 프로젝트")
+                .systemFont(.headline)
+            VStack {
+                GeometryReader { geometry in
+                    let containerWidth = geometry.size.width
+                    let itemWidth = (containerWidth - 56 * 3) / 4
+                    ScrollView {
+                        LazyVGrid(
+                            columns: [
+                                GridItem(.flexible(minimum: itemWidth), spacing: 56),
+                                GridItem(.flexible(minimum: itemWidth), spacing: 56),
+                                GridItem(.flexible(minimum: itemWidth), spacing: 56),
+                                GridItem(.flexible(minimum: itemWidth), spacing: 56)
+                            ], spacing: 40) {
+                                ForEach(0...20, id: \.self) { _ in
+                                    VStack(alignment: .leading) {
+                                        projectCard(itemWidth: itemWidth)
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .onTapGesture {
+//                                        isProjectOpen.toggle()
+                                        navigationPath.append(.view1)
+                                    }
+                                }
+                            }
+                            .padding(.bottom, 68)
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity)
+        }
+        .padding(.top, 68)
+        .frame(alignment: .topLeading)
+    }
+    
+    private func projectCard(itemWidth: CGFloat) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            if let project = vm.projects.first {
+                ZStack {
+                    AsyncImage(url: project.thumbnail) { phase in
+                        phase.image?.resizable().scaledToFit()
+                    }
+                }
+                .frame(maxWidth: .infinity, minHeight: itemWidth / 16 * 9)
+                .background(RoundedRectangle(cornerRadius: 10)
+                    .stroke(lineWidth: 1)
+                    .foregroundColor(.systemGray400)
+                )
+                .cornerRadius(10)
+                VStack(alignment: .leading, spacing: 0) {
+                    Text(project.projectName)
+                        .systemFont(.body)
+                        .lineLimit(1)
+                    Text(project.createAt.description)
+                        .systemFont(.caption2)
+                        .foregroundColor(.systemGray500)
+                        .lineLimit(1)
+                }
+            }
         }
     }
 }
+
+//struct HomeView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationStack {
+//            HomeView()
+//        }
+//    }
+//}

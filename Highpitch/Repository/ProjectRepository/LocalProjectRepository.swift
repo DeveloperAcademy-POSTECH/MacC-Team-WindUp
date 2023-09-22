@@ -7,8 +7,18 @@
 
 import Foundation
 
-class LocalProjectRepository: ProjectRepository{
+class LocalProjectRepository: ProjectRepository {
+    func getProjects() -> [HPProject] {
+        [
+            HPProject(
+                projectName: "Sample-Local",
+                createAt: Date(),
+                presentationPath: Bundle.main.url(forResource: .samplePPT, withExtension: "pdf")!)
+        ]
+    }
+    
     func getProject() {
         print("hello")
     }
+    
 }

@@ -7,16 +7,18 @@
 
 import Foundation
 
-class ProjectService {
+protocol ProjectServiceable: ProjectRepository {}
+
+class ProjectService: ProjectServiceable {
     let repo: ProjectRepository
     
     init(repo: ProjectRepository) {
         self.repo = repo
     }
     
-    //인터넷 연결 체크.. 계속!
-    //로컬로
-    //노션 -> 로컬
+    // 인터넷 연결 체크.. 계속!
+    // 로컬로
+    // 노션 -> 로컬
     
 //    if(인터넷 연결){
 //        repo = RemoteRepository
@@ -32,7 +34,15 @@ extension ProjectService {
 }
 
 extension ProjectService {
-    func getProject() {
-        repo.getProject()
+    func getProjects() -> [HPProject] {
+        repo.getProjects()
+    }
+    func makeNewProject() {
+        let project = HPProject(
+            projectName: "Test",
+            createAt: Date(),
+            presentationPath: Bundle.main.url(forResource: .samplePPT, withExtension: "pdf")!)
+        
+//        repo.makeNewProject(project: project)
     }
 }

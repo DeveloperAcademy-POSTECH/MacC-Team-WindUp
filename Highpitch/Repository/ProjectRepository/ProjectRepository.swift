@@ -8,5 +8,5 @@
 import Foundation
 
 protocol ProjectRepository {
-    func getProject()
+    func getProjects() -> [HPProject]
 }
