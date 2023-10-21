@@ -76,7 +76,7 @@ struct NSPopUpButtonView: NSViewRepresentable {
         popUpButton.isTransparent = true
         popUpButton.cell = cell
         popUpButton.isBordered = false
-        popUpButton.bezelColor = .audioController
+        popUpButton.bezelColor = .audiocontroller
         popUpButton.addItems(withTitles: options)
         popUpButton.target = context.coordinator
         popUpButton.action = #selector(Coordinator.popUpButtonAction(_:))

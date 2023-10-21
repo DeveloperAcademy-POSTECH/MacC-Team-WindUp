@@ -127,6 +127,6 @@ extension Color {
         static let mainWindowDetailsBackground = Color("FCFBFF")
         static let shadowColor = Color("9A8ADA").opacity(0.07)
         static let shadowBlackColor = Color("000000").opacity(0.1)
-        static let audioControllerBackground = Color.audioController
+        static let audioControllerBackground = Color.audiocontroller
     }
 }
